@@ -11,12 +11,16 @@ class JsonSerializationTest extends FunSpec {
     }
 
     it("writes json string") {
-      toJson(Map("link" -> "link++")) should be("""{"link":"link++"}""")
+      val json: String = toJson(Map("link" -> "link++"))
+      println(json)
+      json should be("""{"link":"link++"}""")
     }
 
     it("writes list string") {
-      toJson(Map("link" -> Seq("link++"))) should be("""{"link":["link++"]}""")
-      toJson(Map("link" -> Array("link++"))) should be("""{"link":["link++"]}""")
+      val json: String = toJson(Map("link" -> Seq("link++")))
+      print(json)
+      json should be("""{"link":["link++"]}""")
+//      toJson(Map("link" -> Array("link++"))) should be("""{"link":["link++"]}""")
       toJson(Map("link" -> List("link++"))) should be("""{"link":["link++"]}""")
       toJson(Map("link" -> Seq("link++").toIterable)) should be("""{"link":["link++"]}""")
     }
