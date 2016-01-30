@@ -1,32 +1,33 @@
-import JsonSerialization.toJson
+import JsonSerialization.{JsonSerilizer, NonRecursiveJsonSerializer}
 import org.scalatest.FunSpec
 import org.scalatest.Matchers._
 
-class JsonSerializationTest extends FunSpec {
+trait JsonSerializationTest {
+  self: FunSpec =>
+
+  def jsonSerializer: JsonSerilizer
 
   describe("convert map to json") {
 
     it("writes empty json") {
-      toJson(Map.empty) should be("{}")
+      jsonSerializer.toJson(Map.empty) should be("{}")
     }
 
     it("writes json string") {
-      val json: String = toJson(Map("link" -> "link++"))
+      val json: String = jsonSerializer.toJson(Map("link" -> "link++"))
       println(json)
       json should be("""{"link":"link++"}""")
     }
 
     it("writes list string") {
-      val json: String = toJson(Map("link" -> Seq("link++")))
-      print(json)
-      json should be("""{"link":["link++"]}""")
-//      toJson(Map("link" -> Array("link++"))) should be("""{"link":["link++"]}""")
-      toJson(Map("link" -> List("link++"))) should be("""{"link":["link++"]}""")
-      toJson(Map("link" -> Seq("link++").toIterable)) should be("""{"link":["link++"]}""")
+      jsonSerializer.toJson(Map("link" -> Seq("link++"))) should be("""{"link":["link++"]}""")
+      //      toJson(Map("link" -> Array("link++"))) should be("""{"link":["link++"]}""")
+      jsonSerializer.toJson(Map("link" -> List("link++"))) should be("""{"link":["link++"]}""")
+      jsonSerializer.toJson(Map("link" -> Seq("link++").toIterable)) should be("""{"link":["link++"]}""")
     }
 
     it("writes numbers") {
-      toJson(
+      jsonSerializer.toJson(
         Map(
           "long" -> 10L,
           "int" -> 1,
@@ -37,23 +38,30 @@ class JsonSerializationTest extends FunSpec {
     }
 
     it("writes booleans") {
-      toJson(Map(
+      jsonSerializer.toJson(Map(
         "true" -> true,
         "false" -> false)
       ) should be("""{"true":true,"false":false}""")
     }
 
     it("writes nulls") {
-      toJson(Map("null" -> null)
+      jsonSerializer.toJson(Map("null" -> null)
       ) should be("""{"null":null}""")
     }
 
     it("throws exception when given non-supported type") {
-      intercept[IllegalArgumentException] {toJson(Map("hi" -> new Object))}
+      intercept[IllegalArgumentException] {
+        jsonSerializer.toJson(Map("hi" -> new Object))
+      }
     }
 
     it("throws exception when contains map with non-string key") {
-      intercept[IllegalArgumentException] {toJson(Map("hi" -> Map(1 -> 1)))}
+      intercept[IllegalArgumentException] {
+        jsonSerializer.toJson(Map("hi" -> Map(1 -> 1)))
+      }
     }
   }
+
+
+
 }
