@@ -26,7 +26,24 @@ class Utf8StringTest extends FunSpec {
     it("a mix") {
       "\u0024 \u00A2 \u20AC \uD83D\uDCA9".utf8 should have (length (7))
     }
+  }
 
+  describe("gets the right code point for") {
+    ignore("1 byte chars") {
+      "\u0024".utf8.codePointAt(0) shouldBe -1
+    }
+
+    ignore("2 byte chars") {
+      "\u00A2".utf8.codePointAt(0) shouldBe -1
+    }
+
+    ignore("3 byte chars") {
+      "\u20AC".utf8.codePointAt(0) shouldBe -1
+    }
+
+    ignore("4 byte chars") {
+      "\uD83D\uDCA9".utf8.codePointAt(0) shouldBe -1
+    }
   }
 
 }
