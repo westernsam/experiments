@@ -1,3 +1,5 @@
+package json
+
 import java.io._
 
 import scala.collection.mutable

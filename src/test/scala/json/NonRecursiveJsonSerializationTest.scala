@@ -1,4 +1,6 @@
-import JsonSerialization.{NonRecursiveJsonSerializer, JsonSerilizer}
+package json
+
+import json.JsonSerialization.{JsonSerilizer, NonRecursiveJsonSerializer}
 import org.scalatest.FunSpec
 
 class NonRecursiveJsonSerializationTest extends FunSpec with JsonSerializationTest {

@@ -1,4 +1,6 @@
-import JsonSerialization.{RecursiveJsonSerializer, JsonSerilizer}
+package json
+
+import json.JsonSerialization.{JsonSerilizer, RecursiveJsonSerializer}
 import org.scalatest.FunSpec
 
 

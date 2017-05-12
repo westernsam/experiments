@@ -1,4 +1,6 @@
-import JsonSerialization.{JsonSerilizer, NonRecursiveJsonSerializer}
+package json
+
+import json.JsonSerialization.JsonSerilizer
 import org.scalatest.FunSpec
 import org.scalatest.Matchers._
 
