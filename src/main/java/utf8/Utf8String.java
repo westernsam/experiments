@@ -6,6 +6,8 @@ import java.io.IOException;
 public final class Utf8String {
 
     //TODO
+    // - indexOf - char, string, utf8string
+    // - codePointAt
     // - longer strings
     //     - char[] offsets
     //     - int[] offsets

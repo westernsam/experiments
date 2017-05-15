@@ -74,18 +74,42 @@ object JsonSerialization {
   * A version that is non-recursive. Safe to use for deeply recursive maps
   * */
   class NonRecursiveJsonSerializer extends JsonSerilizer {
+    private class Stack[A] private(var elems: List[A]) {
+      def this() = this(Nil)
+      def isEmpty: Boolean = elems.isEmpty
+      def pop(): A = {
+        val res = elems.head
+        elems = elems.tail
+        res
+      }
+      def push(elem: A): this.type = {
+        elems = elem :: elems; this
+      }
+    }
+
+    sealed trait Event
+    sealed case class StartArray() extends Event
+    sealed case class StartMap() extends Event
+    sealed case class Comma() extends Event
+
+    //probably slower than necessary
+    def escapeJson(str: String): String = str
+      .replace("\\", "\\\\")
+      .replace("\\/", "\\\\/")
+      .replace("\"", "\\\"")
+      .replace("\b", "\\b")
+      .replace("\f", "\\f")
+      .replace("\n", "\\n")
+      .replace("\r", "\\r")
+      .replace("\t", "\\t")
+
     def toJson(m: Map[String, Any], w: Writer): Unit = {
 
-      sealed trait Event
-      sealed case class StartArray() extends Event
-      sealed case class StartMap() extends Event
-      sealed case class Comma() extends Event
-
-      val stack: mutable.Stack[Any] = new mutable.Stack[Any]()
+      val stack: Stack[Any] = new Stack[Any]()
       stack.push(m)
       stack.push(StartMap())
 
-      while (stack.nonEmpty) {
+      while (!stack.isEmpty) {
         stack.pop() match {
           case _: StartMap => w.write('{')
           case _: StartArray => w.write('[')
@@ -130,7 +154,7 @@ object JsonSerialization {
                 w.write(']')
             }
 
-          case str: String => w.write(s""""$str"""")
+          case str: String => w.write(s""""${escapeJson(str)}"""")
           case boolean: Boolean => w.write(s"$boolean")
           case number: Number => w.write(s"${number.toString}")
           case nil if nil == null => w.write("null")
